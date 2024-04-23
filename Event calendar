@@ -1,0 +1,129 @@
+# EventForm.jsx
+import React from "react";
+
+function EventForm({ addEvent }) {
+    const [title, setTitle] = useState('');
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState('');
+    const [description, setDescription] = useState('');
+  
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      if (!title || !date || !time || !description) return;
+      const newEvent = {
+        id: Date.now(),
+        title,
+        date,
+        time,
+        description
+      };
+      addEvent(newEvent);
+      setTitle('');
+      setDate('');
+      setTime('');
+      setDescription('');
+    };
+  
+    return (
+      <form onSubmit={handleSubmit}>
+        <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+        <input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+        <textarea placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+        <button type="submit">Add Event</button>
+      </form>
+    );
+  }
+  
+  export default EventForm;
+# EventList.jsx
+import React from "react";
+import Event from './Event';
+
+function EventList({ events, deleteEvent }) {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredEvents = events.filter(event => {
+    return event.title.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
+  return (
+    <div className="event-list">
+      <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+      {filteredEvents.map(event => (
+        <Event key={event.id} event={event} deleteEvent={deleteEvent} />
+      ))}
+    </div>
+  );
+}
+
+export default EventList;
+# Event.jsx
+import React from 'react';
+
+function Event({ event, deleteEvent }) {
+  return (
+    <div className="event">
+      <h3>{event.title}</h3>
+      <p>Date: {event.date}</p>
+      <p>Time: {event.time}</p>
+      <p>Description: {event.description}</p>
+      <button onClick={() => deleteEvent(event.id)}>Delete</button>
+    </div>
+  );
+}
+
+export default Event;
+# App.css
+.App {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.event {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+button {
+  margin-top: 10px;
+}
+# App.jsx
+import './App.css';
+import EventForm from './EventForm';
+import EventList from './EventList';
+
+function App() {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const storedEvents = JSON.parse(localStorage.getItem('events'));
+    if (storedEvents) {
+      setEvents(storedEvents);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('events', JSON.stringify(events));
+  }, [events]);
+
+  const addEvent = (event) => {
+    setEvents([...events, event]);
+  };
+
+  const deleteEvent = (id) => {
+    setEvents(events.filter(event => event.id !== id));
+  };
+
+  return (
+    <div className="App">
+      <h1>Event Calendar</h1>
+      <EventForm addEvent={addEvent} />
+      <EventList events={events} deleteEvent={deleteEvent} />
+    </div>
+  );
+}
+
+export default App;
