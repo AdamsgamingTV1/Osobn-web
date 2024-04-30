@@ -1,0 +1,131 @@
+# App.css
+
+body, h1, h2, h3, p, ul, li {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+  }
+  nav {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+  }
+  
+  nav ul {
+    list-style-type: none;
+    display: flex;
+  }
+  
+  nav ul li {
+    margin-right: 10px;
+  }
+  
+  nav ul li a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+  
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  ul {
+    list-style-type: none;
+  }
+  
+  li {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+# App.js
+
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Home from './components/Home';
+import DayView from './components/DayView';
+import "./App.css";
+
+function App() {
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />}>
+            <Route path="home" element={<Home />} />
+            {/* <Route path="*" element={<NoPage />} /> */}
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
+}
+
+function App() {
+
+# Navbar.jsx
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+function Navbar() {
+  return (
+    <nav>
+      <ul>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/monday">Monday</Link></li>
+        <li><Link to="/tuesday">Tuesday</Link></li>
+        {}
+      </ul>
+    </nav>
+  );
+}
+export default Navbar;
+
+# Home.jsx
+
+import React from 'react';
+
+function Home() {
+  return (
+    <div>
+      <h2>Home</h2>
+      {}
+    </div>
+  );
+}
+
+export default Home;
+
+# DayView.jsx
+
+import React from 'react';
+import { useParams } from 'react-router-dom';
+
+function DayView() {
+  const { day } = useParams();
+
+  return (
+    <div>
+      <h2>{day}</h2>
+      {/* Add content for specific day */}
+    </div>
+  );
+}
+
+export default DayView;
